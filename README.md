@@ -1,0 +1,1 @@
+# Parent-pom to compile and package FirstSpirit-modules
