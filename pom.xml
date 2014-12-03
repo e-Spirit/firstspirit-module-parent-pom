@@ -4,7 +4,7 @@
 
 	<groupId>com.espirit.ps.maven</groupId>
 	<artifactId>firstspirit-module-parent-pom</artifactId>
-	<version>1.0.0</version>
+	<version>1.2.0</version>
 	<packaging>pom</packaging>
 	
 	<organization>
@@ -15,7 +15,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<artifactoryUrl>http://artifactory.e-spirit.de/artifactory</artifactoryUrl>
+		<artifactoryUrl>https://artifactory.e-spirit.de/artifactory</artifactoryUrl>
 	</properties>
 
 	<build>
@@ -74,6 +74,7 @@
                             def mavenProject = new org.apache.maven.project.MavenProject(project)
                             def dependencies = mavenProject.getArtifacts() // gets also transitive ones
                             def artifacts = ""
+                            def artifactsModule = ""
                             def artifactsRuntime = ""
 
                             dependencies.each {
@@ -83,7 +84,8 @@
                                 if ( it.getScope().equals("compile")) {
                                     // More infos on Artifact there : http://maven.apache.org/ref/3.0.3/maven-artifact/apidocs/org/apache/maven/artifact/Artifact.html
                                     def artifact = mavenProject.getArtifacts().find { artifact -> artifact.getArtifactId()==it.getArtifactId() }
-                                    artifacts = artifacts + "<resource scope=\"module\">lib/" + artifact.getFile().getName() + "</resource>\n"
+                                    artifacts = artifacts + "<resource>lib/" + artifact.getFile().getName() + "</resource>\n"
+                                    artifactsModule = artifactsModule + "<resource scope=\"module\">lib/" + artifact.getFile().getName() + "</resource>\n"
                                 }
 
                                 // dependencies for webapplication
@@ -95,8 +97,10 @@
                             }
                             // Write resources to a maven property
                             project.properties['resources'] = artifacts
+                            project.properties['resourcesModule'] = artifactsModule
                             project.properties['resourcesRuntime'] = artifactsRuntime
 
+                            println "module-resources can be found at "+project.properties['resourcesModule']
                             println "service-resources can be found at "+project.properties['resources']
                             println "webapp-resources can be found at "+project.properties['resourcesRuntime']
                             ]]>
@@ -312,6 +316,13 @@
 							<file>target/pom-install-deploy-fix/pom.xml</file>
 							<pomFile>target/pom-install-deploy-fix/pom.xml</pomFile>
 							<version>${project.version}</version>
+							<artifacts>
+								<artifact>
+									<file>${project.build.directory}/${fsm.build.finalName}.fsm</file>
+									<type>zip</type>
+									<classifier>fsm</classifier>
+								</artifact>
+							</artifacts>
 						</configuration>
 					</execution>
 				</executions>
@@ -423,5 +434,13 @@
 		</profile>
 
 	</profiles>
+	
+	<distributionManagement>
+		<repository>
+			<id>artifactory</id>
+			<name>ps-release-local</name>
+			<url>${artifactoryUrl}</url>
+		</repository>
+	</distributionManagement>
 
 </project>
