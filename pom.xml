@@ -5,7 +5,7 @@
 
     <groupId>com.espirit.ps.maven</groupId>
     <artifactId>firstspirit-module-parent-pom</artifactId>
-    <version>1.3.0</version>
+    <version>1.3.1</version>
     <packaging>pom</packaging>
 
     <organization>
@@ -16,7 +16,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <maven-compiler.source-version>1.8</maven-compiler.source-version>
+        <maven-compiler.source-version>1.7</maven-compiler.source-version>
         <maven-compiler.target-version>1.7</maven-compiler.target-version>
         <artifactoryUrl>https://artifactory.e-spirit.de/artifactory/ps-release-local</artifactoryUrl>
         <isRelease>true</isRelease>
@@ -39,12 +39,6 @@
                 <artifactId>wrapper</artifactId>
                 <version>${firstspirit.wrapper.version}</version>
             </dependency>
-            <!--<dependency>
-                <groupId>commons-io</groupId>
-                <artifactId>commons-io</artifactId>
-                <version>1.4</version>
-                <scope>test</scope>
-            </dependency>-->
             <dependency>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
@@ -348,7 +342,7 @@
                             </goals>
                             <configuration>
                                 <packaging>pom</packaging>
-                                <file>target/${project.artifactId}-${project.version}.jar</file>
+                                <file>target/pom-install-deploy-fix/pom.xml</file>
                                 <!-- must be customized on local pom -->
                                 <pomFile>target/pom-install-deploy-fix/pom.xml</pomFile>
                                 <url>${project.distributionManagement.repository.url}</url>
@@ -426,11 +420,10 @@
         </pluginManagement>
         <plugins>
             <plugin>
-                <artifactId>maven-deploy-plugin</artifactId>
+                <artifactId>maven-resources-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>overwrite-pom</id>
-                        <phase>none</phase>
+                        <phase>deploy</phase>
                     </execution>
                 </executions>
             </plugin>
