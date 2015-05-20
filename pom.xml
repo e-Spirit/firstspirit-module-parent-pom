@@ -5,7 +5,7 @@
 
     <groupId>com.espirit.ps.maven</groupId>
     <artifactId>firstspirit-module-parent-pom</artifactId>
-    <version>2.0.0</version>
+    <version>2.0.1</version>
     <packaging>pom</packaging>
 
     <organization>
@@ -333,27 +333,6 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-deploy-plugin</artifactId>
                     <version>2.7</version>
-                    <executions>
-                        <execution>
-                            <id>overwrite-pom</id>
-                            <phase>deploy</phase>
-                            <goals>
-                                <goal>deploy-file</goal>
-                            </goals>
-                            <configuration>
-                                <packaging>pom</packaging>
-                                <file>target/pom-install-deploy-fix/pom.xml</file>
-                                <!-- must be customized on local pom -->
-                                <pomFile>target/pom-install-deploy-fix/pom.xml</pomFile>
-                                <url>${project.distributionManagement.repository.url}</url>
-                                <version>${project.version}</version>
-                                <repositoryId>espirit-artifactory</repositoryId>
-                                <updateReleaseInfo>${isRelease}</updateReleaseInfo>
-                                <uniqueVersion>false</uniqueVersion>
-                                <generatePom>false</generatePom>
-                            </configuration>
-                        </execution>
-                    </executions>
                 </plugin>
                 <plugin>
                     <artifactId>maven-install-plugin</artifactId>
@@ -420,10 +399,22 @@
         </pluginManagement>
         <plugins>
             <plugin>
-                <artifactId>maven-resources-plugin</artifactId>
+                <artifactId>maven-deploy-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <artifactId>maven-install-plugin</artifactId>
                 <executions>
                     <execution>
-                        <phase>deploy</phase>
+                        <id>overwrite-pom</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <configuration>
+                            <file>${project.basedir}/pom.xml</file>
+                            <pomFile>${project.basedir}/pom.xml</pomFile>
+                            <version>${project.version}</version>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
