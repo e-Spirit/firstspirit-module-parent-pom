@@ -3,9 +3,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.espirit.ps.maven</groupId>
     <artifactId>firstspirit-module-parent-pom</artifactId>
-    <version>2.0.1</version>
+    <version>2.1.2</version>
     <packaging>pom</packaging>
 
     <organization>
@@ -13,103 +12,15 @@
         <url>http://www.e-spirit.com/</url>
     </organization>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <maven-compiler.source-version>1.7</maven-compiler.source-version>
-        <maven-compiler.target-version>1.7</maven-compiler.target-version>
-        <artifactoryUrl>https://artifactory.e-spirit.de/artifactory/ps-release-local</artifactoryUrl>
-        <isRelease>true</isRelease>
-    </properties>
-
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>de.espirit.firstspirit</groupId>
-                <artifactId>fs-access</artifactId>
-                <version>${firstspirit.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>de.espirit.firstspirit</groupId>
-                <artifactId>server</artifactId>
-                <version>${firstspirit.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>de.espirit.firstspirit</groupId>
-                <artifactId>wrapper</artifactId>
-                <version>${firstspirit.wrapper.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.projectlombok</groupId>
-                <artifactId>lombok</artifactId>
-                <version>1.16.4</version>
-            </dependency>
-            <dependency>
-                <groupId>log4j</groupId>
-                <artifactId>log4j</artifactId>
-                <version>1.2.17</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.powermock</groupId>
-                <artifactId>powermock-module-junit4</artifactId>
-                <version>1.4.12</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.powermock</groupId>
-                <artifactId>powermock-api-mockito</artifactId>
-                <version>1.4.12</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-                <version>4.12</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.mockito</groupId>
-                <artifactId>mockito-all</artifactId>
-                <version>1.10.19</version>
-                <scope>test</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
+    <parent>
+        <groupId>com.espirit.ps.maven</groupId>
+        <artifactId>firstspirit-base-parent-pom</artifactId>
+        <version>1.0.0</version>
+    </parent>
 
     <build>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-                <includes>
-                    <include>**/*.xml</include>
-                </includes>
-            </resource>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>false</filtering>
-                <excludes>
-                    <exclude>**/*.xml</exclude>
-                </excludes>
-            </resource>
-        </resources>
-
         <pluginManagement>
             <plugins>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.1</version>
-                    <configuration>
-                        <source>${maven-compiler.source-version}</source>
-                        <target>${maven-compiler.target-version}</target>
-                        <compilerArgument>-Xlint:all</compilerArgument>
-                        <showWarnings>false</showWarnings>
-                        <showDeprecation>true</showDeprecation>
-                        <encoding>${project.build.sourceEncoding}</encoding>
-                    </configuration>
-                </plugin>
                 <plugin>
                     <groupId>org.codehaus.groovy.maven</groupId>
                     <artifactId>gmaven-plugin</artifactId>
@@ -165,82 +76,6 @@
                     </executions>
                 </plugin>
                 <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-failsafe-plugin</artifactId>
-                    <version>2.9</version>
-                    <executions>
-                        <execution>
-                            <id>integration-test</id>
-                            <goals>
-                                <goal>integration-test</goal>
-                            </goals>
-                        </execution>
-                        <execution>
-                            <id>verify</id>
-                            <goals>
-                                <goal>verify</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-surefire-plugin</artifactId>
-                    <version>2.17</version>
-                    <configuration>
-                        <excludes>
-                            <exclude>**/*ITest.java</exclude>
-                            <exclude>**/*IT.java</exclude>
-                            <exclude>**/itest/*.java</exclude>
-                        </excludes>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-jar-plugin</artifactId>
-                    <version>2.3.1</version>
-                    <configuration>
-                        <archive>
-                            <addMavenDescriptor>false</addMavenDescriptor>
-                            <manifest>
-                                <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-                                <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
-                            </manifest>
-                        </archive>
-                    </configuration>
-                    <executions>
-                        <execution>
-                            <id>default-jar</id>
-                            <phase>process-classes</phase>
-                            <configuration>
-                                <excludes>
-                                    <exclude>**/*.jar</exclude>
-                                </excludes>
-                            </configuration>
-                        </execution>
-                    </executions>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-dependency-plugin</artifactId>
-                    <version>2.3</version>
-                    <executions>
-                        <execution>
-                            <id>copy-dependencies</id>
-                            <phase>package</phase>
-                            <goals>
-                                <goal>copy-dependencies</goal>
-                            </goals>
-                            <configuration>
-                                <outputDirectory>${basedir}/target/dependencies/</outputDirectory>
-                                <overWriteReleases>false</overWriteReleases>
-                                <overWriteSnapshots>false</overWriteSnapshots>
-                                <overWriteIfNewer>true</overWriteIfNewer>
-                                <excludeTransitive>false</excludeTransitive>
-                                <includeScope>runtime</includeScope>
-                            </configuration>
-                        </execution>
-                    </executions>
-                </plugin>
-                <plugin>
                     <artifactId>maven-assembly-plugin</artifactId>
                     <dependencies>
                         <dependency>
@@ -250,20 +85,6 @@
                         </dependency>
                     </dependencies>
                     <executions>
-                        <execution>
-                            <id>jar-with-dependencies</id>
-                            <phase>package</phase>
-                            <goals>
-                                <goal>single</goal>
-                            </goals>
-                            <configuration>
-                                <descriptorRefs>
-                                    <descriptorRef>jar-with-dependencies</descriptorRef>
-                                </descriptorRefs>
-                                <archiverConfig>
-                                </archiverConfig>
-                            </configuration>
-                        </execution>
                         <execution>
                             <id>fsm-dependencies</id>
                             <phase>package</phase>
@@ -288,6 +109,9 @@
                         <execution>
                             <id>rename</id>
                             <phase>package</phase>
+                            <goals>
+                                <goal>run</goal>
+                            </goals>
                             <configuration>
                                 <tasks>
                                     <property name="compile_classpath" refid="maven.compile.classpath"/>
@@ -298,9 +122,6 @@
                                           tofile="target/${project.artifactId}-${project.version}.fsm"/>
                                 </tasks>
                             </configuration>
-                            <goals>
-                                <goal>run</goal>
-                            </goals>
                         </execution>
                     </executions>
                 </plugin>
@@ -322,7 +143,7 @@
                     </configuration>
                     <executions>
                         <execution>
-                            <phase>package</phase>
+                            <phase>deploy</phase>
                             <goals>
                                 <goal>attach-artifact</goal>
                             </goals>
@@ -330,32 +151,8 @@
                     </executions>
                 </plugin>
                 <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-deploy-plugin</artifactId>
-                    <version>2.7</version>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-install-plugin</artifactId>
-                    <version>2.3.1</version>
-                    <executions>
-                        <execution>
-                            <id>overwrite-pom</id>
-                            <phase>install</phase>
-                            <goals>
-                                <goal>install-file</goal>
-                            </goals>
-                            <configuration>
-                                <packaging>pom</packaging>
-                                <file>target/pom-install-deploy-fix/pom.xml</file>
-                                <pomFile>target/pom-install-deploy-fix/pom.xml</pomFile>
-                                <version>${project.version}</version>
-                            </configuration>
-                        </execution>
-                    </executions>
-                </plugin>
-                <plugin>
                     <artifactId>maven-resources-plugin</artifactId>
-                    <version>2.6</version>
+                    <version>2.4.3</version>
                     <executions>
                         <execution>
                             <id>replace-pom-placeholder</id>
@@ -366,7 +163,7 @@
                             <configuration>
                                 <resources>
                                     <resource>
-                                        <directory>${project.basedir}</directory>
+                                        <directory>${basedir}</directory>
                                         <includes>
                                             <include>pom.xml</include>
                                         </includes>
@@ -378,127 +175,83 @@
                         </execution>
                     </executions>
                 </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-plugin-plugin</artifactId>
-                    <version>3.2</version>
-                    <configuration>
-                        <!-- see http://jira.codehaus.org/browse/MNG-5346 -->
-                        <skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
-                    </configuration>
-                    <executions>
-                        <execution>
-                            <id>mojo-descriptor</id>
-                            <goals>
-                                <goal>descriptor</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
             </plugins>
         </pluginManagement>
-        <plugins>
-            <plugin>
-                <artifactId>maven-deploy-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <artifactId>maven-install-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>overwrite-pom</id>
-                        <phase>install</phase>
-                        <goals>
-                            <goal>install-file</goal>
-                        </goals>
-                        <configuration>
-                            <file>${project.basedir}/pom.xml</file>
-                            <pomFile>${project.basedir}/pom.xml</pomFile>
-                            <version>${project.version}</version>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
     </build>
-
-    <distributionManagement>
-        <repository>
-            <id>espirit-artifactory</id>
-            <name>ps-release-local</name>
-            <url>${artifactoryUrl}</url>
-        </repository>
-    </distributionManagement>
 
     <profiles>
         <profile>
-            <id>integration-test</id>
-            <activation>
-                <property>
-                    <name>!firstspirit.version</name>
-                </property>
-            </activation>
-            <properties>
-                <isRelease>false</isRelease>
-            </properties>
+            <id>firstspirit-module-create</id>
             <build>
                 <plugins>
                     <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-failsafe-plugin</artifactId>
-                        <version>2.9</version>
-                        <configuration>
-                            <skip>true</skip>
-                            <skipITs>true</skipITs>
-                            <skipTests>true</skipTests>
-                        </configuration>
+                        <groupId>org.codehaus.groovy.maven</groupId>
+                        <artifactId>gmaven-plugin</artifactId>
+                        <inherited>true</inherited>
+                    </plugin>
+                    <plugin>
+                        <artifactId>maven-assembly-plugin</artifactId>
+                        <inherited>true</inherited>
+                    </plugin>
+                    <plugin>
+                        <artifactId>maven-install-plugin</artifactId>
+                        <version>2.3.1</version>
                         <executions>
                             <execution>
+                                <id>overwrite-pom</id>
+                                <phase>install</phase>
                                 <goals>
-                                    <goal>integration-test</goal>
-                                    <goal>verify</goal>
+                                    <goal>install-file</goal>
                                 </goals>
+                                <configuration>
+                                    <packaging>pom</packaging>
+                                    <file>target/pom-install-deploy-fix/pom.xml</file>
+                                    <pomFile>target/pom-install-deploy-fix/pom.xml</pomFile>
+                                    <version>${project.version}</version>
+                                </configuration>
                             </execution>
                         </executions>
+                    </plugin>
+                    <plugin>
+                        <artifactId>maven-resources-plugin</artifactId>
+                        <inherited>true</inherited>
+                    </plugin>
+                    <plugin>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <inherited>true</inherited>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>build-helper-maven-plugin</artifactId>
+                        <inherited>true</inherited>
                     </plugin>
                 </plugins>
             </build>
         </profile>
         <profile>
-            <id>test</id>
-            <properties>
-                <ci.version>5.0</ci.version>
-                <fsServerRoot>/opt/firstspirit5</fsServerRoot>
-                <fsServerPort>8000</fsServerPort>
-                <fsServerGcLog>true</fsServerGcLog>
-                <fsServerInstall>true</fsServerInstall>
-                <fsThreadwait>5000</fsThreadwait>
-                <fsConnectionRetryCount>10</fsConnectionRetryCount>
-                <fsServerOps>-ea -server -Xms1024m -Xmx2048m -XX:MaxPermSize=256m -XX:+DisableExplicitGC -verbose:gc
-                    -XX:+HeapDumpOnOutOfMemoryError -Djava.awt.headless=true -Djava.security.debug=no
-                    -Djava.security.manager -Djava.rmi.dgc.leaseValue=3600000 -Dsun.rmi.dgc.server.gcInterval=3600000
-                    -Dsun.rmi.dgc.client.gcInterval=3600000
-                </fsServerOps>
-            </properties>
+            <id>firstspirit-module-install</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.espirit.ps.maven</groupId>
+                        <artifactId>fsmoduleinstaller-maven-plugin</artifactId>
+                        <version>${fsmoduleinstaller.version}</version>
+                        <executions>
+                            <execution>
+                                <id>install-module</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>install</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <moduleFile>${project.build.directory}/${project.artifactId}-${project.version}.fsm</moduleFile>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
         </profile>
-        <profile>
-            <id>production</id>
-            <properties>
-                <ci.version>5.0</ci.version>
-                <fsServerRoot>/opt/firstspirit5</fsServerRoot>
-                <fsServerPort>8000</fsServerPort>
-                <fsServerGcLog>true</fsServerGcLog>
-                <fsServerInstall>true</fsServerInstall>
-                <fsThreadwait>5000</fsThreadwait>
-                <fsConnectionRetryCount>10</fsConnectionRetryCount>
-                <fsServerOps>-ea -server -Xms1024m -Xmx2048m -XX:MaxPermSize=256m -XX:+DisableExplicitGC -verbose:gc
-                    -XX:+HeapDumpOnOutOfMemoryError -Djava.awt.headless=true -Djava.security.debug=no
-                    -Djava.security.manager -Djava.rmi.dgc.leaseValue=3600000 -Dsun.rmi.dgc.server.gcInterval=3600000
-                    -Dsun.rmi.dgc.client.gcInterval=3600000
-                </fsServerOps>
-            </properties>
-        </profile>
-
     </profiles>
-
 
 </project>
