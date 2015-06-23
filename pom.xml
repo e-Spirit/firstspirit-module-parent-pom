@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>firstspirit-module-parent-pom</artifactId>
-    <version>2.1.2</version>
+    <version>1.4.0</version>
     <packaging>pom</packaging>
 
     <organization>
