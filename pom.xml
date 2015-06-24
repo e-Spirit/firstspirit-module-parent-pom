@@ -261,7 +261,7 @@
             </build>
         </profile>
         <profile>
-            <id>firstspirit-install-module</id>
+            <id>firstspirit-module-install</id>
             <build>
                 <plugins>
                     <plugin>
@@ -287,7 +287,7 @@
             </build>
         </profile>
         <profile>
-            <id>firstspirit-uninstall-module</id>
+            <id>firstspirit-module-uninstall</id>
             <build>
                 <plugins>
                     <plugin>
