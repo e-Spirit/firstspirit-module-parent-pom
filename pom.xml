@@ -76,6 +76,10 @@
                     </executions>
                 </plugin>
                 <plugin>
+                    <groupId>com.espirit.ps.maven</groupId>
+                    <artifactId>fsm-assembly</artifactId>
+                </plugin>
+                <plugin>
                     <artifactId>maven-assembly-plugin</artifactId>
                     <dependencies>
                         <dependency>
@@ -85,6 +89,20 @@
                         </dependency>
                     </dependencies>
                     <executions>
+                        <!--<execution>
+                            <id>jar-with-dependencies</id>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>single</goal>
+                            </goals>
+                            <configuration>
+                                <descriptorRefs>
+                                    <descriptorRef>jar-with-dependencies</descriptorRef>
+                                </descriptorRefs>
+                                <archiverConfig>
+                                </archiverConfig>
+                            </configuration>
+                        </execution>-->
                         <execution>
                             <id>fsm-dependencies</id>
                             <phase>package</phase>
@@ -104,23 +122,19 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-antrun-plugin</artifactId>
-                    <version>1.4</version>
+                    <version>1.8</version>
                     <executions>
                         <execution>
-                            <id>rename</id>
+                            <id>rename-zip-to-fsm</id>
                             <phase>package</phase>
                             <goals>
                                 <goal>run</goal>
                             </goals>
                             <configuration>
-                                <tasks>
-                                    <property name="compile_classpath" refid="maven.compile.classpath"/>
-                                    <property name="runtime_classpath" refid="maven.runtime.classpath"/>
-                                    <property name="test_classpath" refid="maven.test.classpath"/>
-                                    <property name="plugin_classpath" refid="maven.plugin.classpath"/>
-                                    <move file="target/${project.artifactId}-${project.version}-fsm.zip"
-                                          tofile="target/${project.artifactId}-${project.version}.fsm"/>
-                                </tasks>
+                                <target>
+                                    <copy file="${project.build.directory}/${project.artifactId}-${project.version}-fsm.zip"
+                                          tofile="${project.build.directory}/${project.artifactId}-${project.version}.fsm"/>
+                                </target>
                             </configuration>
                         </execution>
                     </executions>
@@ -128,18 +142,15 @@
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>build-helper-maven-plugin</artifactId>
-                    <version>1.7</version>
+                    <version>1.9.1</version>
                     <configuration>
                         <artifacts>
                             <artifact>
                                 <file>target/${project.artifactId}-${project.version}.fsm</file>
                                 <type>fsm</type>
+                                <classifier>fsm-file</classifier>
                             </artifact>
                         </artifacts>
-                        <name/>
-                        <regex/>
-                        <replacement/>
-                        <value/>
                     </configuration>
                     <executions>
                         <execution>
@@ -147,6 +158,23 @@
                             <goals>
                                 <goal>attach-artifact</goal>
                             </goals>
+                        </execution>
+                        <execution>
+                            <id>attach-fsm-artifact</id>
+                            <phase>install</phase>
+                            <goals>
+                                <goal>attach-artifact</goal>
+                            </goals>
+                            <configuration>
+                                <artifacts>
+                                    <artifact>
+                                        <file>${project.build.directory}/${project.artifactId}-${project.version}.fsm
+                                        </file>
+                                        <type>fsm</type>
+                                        <classifier>fsm-file</classifier>
+                                    </artifact>
+                                </artifacts>
+                            </configuration>
                         </execution>
                     </executions>
                 </plugin>
@@ -185,6 +213,10 @@
             <build>
                 <plugins>
                     <plugin>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <inherited>true</inherited>
+                    </plugin>
+                    <plugin>
                         <groupId>org.codehaus.groovy.maven</groupId>
                         <artifactId>gmaven-plugin</artifactId>
                         <inherited>true</inherited>
@@ -195,19 +227,19 @@
                     </plugin>
                     <plugin>
                         <artifactId>maven-install-plugin</artifactId>
-                        <version>2.3.1</version>
+                        <version>2.5.2</version>
                         <executions>
                             <execution>
-                                <id>overwrite-pom</id>
+                                <id>install-fsm-locally</id>
                                 <phase>install</phase>
                                 <goals>
                                     <goal>install-file</goal>
                                 </goals>
                                 <configuration>
-                                    <packaging>pom</packaging>
-                                    <file>target/pom-install-deploy-fix/pom.xml</file>
-                                    <pomFile>target/pom-install-deploy-fix/pom.xml</pomFile>
-                                    <version>${project.version}</version>
+                                    <repositoryLayout>default</repositoryLayout>
+                                    <file>${project.build.directory}/${project.artifactId}-${project.version}.fsm</file>
+                                    <pomFile>${project.build.directory}/pom-install-deploy-fix/pom.xml</pomFile>
+                                    <packaging>fsm</packaging>
                                 </configuration>
                             </execution>
                         </executions>
@@ -229,7 +261,7 @@
             </build>
         </profile>
         <profile>
-            <id>firstspirit-module-install</id>
+            <id>firstspirit-install-module</id>
             <build>
                 <plugins>
                     <plugin>
@@ -241,13 +273,39 @@
                                 <id>install-module</id>
                                 <phase>package</phase>
                                 <goals>
-                                    <goal>install</goal>
+                                    <goal>install-module</goal>
                                 </goals>
+                                <configuration>
+                                    <moduleFile>
+                                        ${project.build.directory}/${project.artifactId}-${project.version}.fsm
+                                    </moduleFile>
+                                </configuration>
                             </execution>
                         </executions>
-                        <configuration>
-                            <moduleFile>${project.build.directory}/${project.artifactId}-${project.version}.fsm</moduleFile>
-                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>firstspirit-uninstall-module</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.espirit.ps.maven</groupId>
+                        <artifactId>fsmoduleinstaller-maven-plugin</artifactId>
+                        <version>${fsmoduleinstaller.version}</version>
+                        <executions>
+                            <execution>
+                                <id>uninstall-module</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>uninstall-module</goal>
+                                </goals>
+                                <configuration>
+                                    <moduleName>${project.artifactId}-${project.version}</moduleName>
+                                </configuration>
+                            </execution>
+                        </executions>
                     </plugin>
                 </plugins>
             </build>
