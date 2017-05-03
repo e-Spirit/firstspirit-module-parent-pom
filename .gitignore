@@ -97,3 +97,8 @@ local.properties
 
 # Created by .ignore support plugin (hsz.mobi)
 /target/
+/target/*
+
+# ignore some helper test files for the s3 development
+/src/test/java/EndingSlashRegexTest.java
+/src/test/java/Main.java
