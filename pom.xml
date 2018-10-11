@@ -160,6 +160,7 @@
 						</execution>
 					</executions>
 				</plugin>
+				
 			</plugins>
 		</pluginManagement>
 	</build>
@@ -200,7 +201,6 @@
 									<packaging>fsm</packaging>
 								</configuration>
 							</execution>
-
 						</executions>
 					</plugin>
 					<plugin>
@@ -215,6 +215,36 @@
 						<groupId>org.codehaus.mojo</groupId>
 						<artifactId>build-helper-maven-plugin</artifactId>
 						<inherited>true</inherited>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>firstspirit-module-check</id>
+			<properties>
+				<firstspirit.complianceLevel>HIGHEST</firstspirit.complianceLevel>
+			</properties>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>de.espirit.mavenplugins</groupId>
+						<artifactId>fsmchecker</artifactId>
+						<version>0.8</version>
+						<executions>
+							<execution>
+								<id>verify-fsm</id>
+								<goals>
+									<goal>verify</goal>
+								</goals>
+								<phase>verify</phase>
+							</execution>
+						</executions>
+						<configuration>
+							<webserviceUrl>https://fsdev.e-spirit.de/FsmDependencyDetector</webserviceUrl>
+							<fsmFile>target/${project.artifactId}-${project.version}.fsm</fsmFile>
+							<complianceLevel>${firstspirit.complianceLevel}</complianceLevel>
+							<firstSpiritVersion>${firstspirit.version}</firstSpiritVersion>
+						</configuration>
 					</plugin>
 				</plugins>
 			</build>
