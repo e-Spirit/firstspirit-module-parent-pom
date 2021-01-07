@@ -106,7 +106,6 @@
                             <artifact>
                                 <file>${project.build.directory}/${project.artifactId}-${project.version}.fsm</file>
                                 <type>fsm</type>
-                                <!--classifier>fsm-file</classifier-->
                             </artifact>
                         </artifacts>
                     </configuration>
@@ -129,7 +128,6 @@
                                         <file>${project.build.directory}/${project.artifactId}-${project.version}.fsm
                                         </file>
                                         <type>fsm</type>
-                                        <!--classifier>fsm-file</classifier-->
                                     </artifact>
                                 </artifacts>
                             </configuration>
